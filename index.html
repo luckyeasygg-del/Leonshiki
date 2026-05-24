@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Kinoo Store | Script & Panel Pterodactyl</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Poppins', 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: linear-gradient(135deg, #0a0f1e 0%, #0d1225 50%, #0a0f1e 100%);
+            color: #fff;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1a1f2e;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #6c5ce7, #a855f7);
+            border-radius: 10px;
+        }
+
+        .header {
+            padding: 20px 24px;
+            background: rgba(10, 15, 30, 0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(108, 92, 231, 0.3);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .logo-icon {
+            width: 45px;
+            height: 45px;
+            background: linear-gradient(135deg, #6c5ce7, #a855f7);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 26px;
+            box-shadow: 0 4px 15px rgba(108, 92, 231, 0.4);
+        }
+        .logo h1 {
+            font-size: 24px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #fff, #a855f7);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .stats-bar {
+            display: flex;
+            gap: 20px;
+            background: rgba(108, 92, 231, 0.15);
+            padding: 8px 20px;
+            border-radius: 40px;
+            backdrop-filter: blur(10px);
+        }
+        .stat {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            padding: 20px 24px;
+            max-width: 1400px;
+            margin: 0 auto;
+            border-bottom: 1px solid rgba(108, 92, 231, 0.2);
+            flex-wrap: wrap;
+        }
+        .tab-btn {
+            background: rgba(255,255,255,0.05);
+            border: none;
+            padding: 12px 28px;
+            border-radius: 40px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .tab-btn.active {
+            background: linear-gradient(135deg, #6c5ce7, #a855f7);
+            box-shadow: 0 4px 15px rgba(108,92,231,0.4);
+        }
+        .tab-content {
+            display: none;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px 24px;
+        }
+        .tab-content.active {
+            display: block;
+        }
+
+        .games-masonry {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 20px;
+        }
+        .game-card {
+            background: linear-gradient(135deg, rgba(20,25,45,0.9), rgba(15,20,40,0.9));
+            border-radius: 24px;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(108,92,231,0.2);
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        .game-card:hover {
+            transform: translateY(-5px);
+            border-color: #a855f7;
+        }
+        .game-image {
+            height: 150px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 64px;
+            background: linear-gradient(135deg, #2a2f4e, #1a1f3e);
+        }
+        .game-info {
+            padding: 16px;
+        }
+        .play-btn {
+            background: linear-gradient(135deg, #6c5ce7, #a855f7);
+            border: none;
+            padding: 10px;
+            border-radius: 30px;
+            color: white;
+            font-weight: 600;
+            width: 100%;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: all 0.2s;
+        }
+        .play-btn:hover {
+            transform: scale(0.98);
+            opacity: 0.9;
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 25px;
+        }
+        .product-card {
+            background: linear-gradient(135deg, #11162e, #0a0f22);
+            border-radius: 28px;
+            border: 1px solid rgba(108,92,231,0.3);
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+        .product-card:hover {
+            transform: translateY(-5px);
+            border-color: #a855f7;
+            box-shadow: 0 10px 30px rgba(108,92,231,0.2);
+        }
+        .product-header {
+            background: linear-gradient(135deg, #6c5ce7, #a855f7);
+            padding: 20px;
+            text-align: center;
+        }
+        .product-header h2 {
+            font-size: 24px;
+            letter-spacing: 2px;
+        }
+        .product-body {
+            padding: 20px;
+        }
+        .price-list {
+            background: rgba(108,92,231,0.15);
+            border-radius: 20px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        .price-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .price-item:last-child {
+            border-bottom: none;
+        }
+        .menu-bugs, .tools-menu {
+            margin: 15px 0;
+        }
+        .menu-bugs h4, .tools-menu h4 {
+            color: #a855f7;
+            margin-bottom: 10px;
+        }
+        .badge-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+        }
+        .badge {
+            background: rgba(168,85,247,0.2);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+        }
+        .order-btn {
+            background: linear-gradient(135deg, #00b894, #00cec9);
+            border: none;
+            padding: 14px;
+            border-radius: 40px;
+            color: white;
+            font-weight: 700;
+            width: 100%;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 15px;
+            transition: transform 0.2s;
+        }
+        .order-btn:hover {
+            transform: scale(1.02);
+        }
+
+        /* Button Info Channel */
+        .info-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+            margin: 20px 0 10px;
+        }
+        .info-channel-btn {
+            background: linear-gradient(135deg, #ff6b6b, #feca57);
+            border: none;
+            padding: 12px 28px;
+            border-radius: 50px;
+            color: white;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        .info-channel-btn:hover {
+            transform: translateY(-3px);
+            filter: brightness(1.05);
+            box-shadow: 0 8px 25px rgba(255,107,107,0.4);
+        }
+        .info-channel-btn.priv {
+            background: linear-gradient(135deg, #a855f7, #6c5ce7);
+        }
+        .info-channel-btn.prod {
+            background: linear-gradient(135deg, #00b894, #00cec9);
+        }
+
+        .scroll-container {
+            overflow-x: auto;
+            scroll-behavior: smooth;
+            padding-bottom: 10px;
+        }
+        .category-list {
+            display: flex;
+            gap: 12px;
+        }
+        .category-btn {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(108,92,231,0.3);
+            padding: 10px 22px;
+            border-radius: 40px;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.2s;
+        }
+        .category-btn:hover {
+            background: rgba(108,92,231,0.3);
+        }
+        .category-btn.active {
+            background: linear-gradient(135deg, #6c5ce7, #a855f7);
+        }
+
+        .footer {
+            text-align: center;
+            padding: 30px;
+            border-top: 1px solid rgba(108,92,231,0.2);
+            margin-top: 40px;
+            font-size: 13px;
+        }
+        @media (max-width: 768px) {
+            .products-grid { grid-template-columns: 1fr; }
+            .header-content { flex-direction: column; text-align: center; }
+            .tabs { justify-content: center; }
+            .info-buttons { flex-direction: column; align-items: center; }
+            .info-channel-btn { width: 80%; justify-content: center; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <div class="header-content">
+        <div class="logo">
+            <div class="logo-icon">⭐</div>
+            <h1>Kinoo Store</h1>
+        </div>
+        <div class="stats-bar">
+            <div class="stat">🎮 24+ Games</div>
+            <div class="stat">🛒 5 Script</div>
+            <div class="stat">🐉 Panel Pterodactyl</div>
+        </div>
+    </div>
+</div>
+
+<div class="tabs">
+    <button class="tab-btn active" onclick="switchTab('games')">🎮 Game Hub</button>
+    <button class="tab-btn" onclick="switchTab('scripts')">🛒 Script WhatsApp</button>
+    <button class="tab-btn" onclick="switchTab('panel')">🐉 Panel Pterodactyl</button>
+</div>
+
+<!-- TAB GAME -->
+<div id="gamesTab" class="tab-content active">
+    <div class="categories" style="padding:0 0 20px 0">
+        <div class="scroll-container">
+            <div class="category-list" id="categoryList"></div>
+        </div>
+    </div>
+    <div class="games-masonry" id="allGamesGrid"></div>
+</div>
+
+<!-- TAB SCRIPT WHATSAPP -->
+<div id="scriptsTab" class="tab-content">
+    <div class="products-grid">
+        <!-- SCRIPT APHOPIS -->
+        <div class="product-card">
+            <div class="product-header"><h2>🔥 SCRIPT APHOPIS</h2></div>
+            <div class="product-body">
+                <div class="price-list">
+                    <div class="price-item"><span>📦 3x Update Script</span><span>30K</span></div>
+                    <div class="price-item"><span>⚡ Full Update</span><span>50K</span></div>
+                    <div class="price-item"><span>🔄 Reseller Full Update</span><span>60K</span></div>
+                    <div class="price-item"><span>🤝 Partner Full Update</span><span>80K</span></div>
+                    <div class="price-item"><span>👑 Moderator Full Update</span><span>100K</span></div>
+                </div>
+                <div class="menu-bugs"><h4>🐛 Menu Bugs</h4><div class="badge-list"><span class="badge">Forclose Invisible Msg</span><span class="badge">Forclose Invisible Murbug</span><span class="badge">Forclose Ios/iphone</span><span class="badge">Buldozer V1</span><span class="badge">Buldozer V2</span><span class="badge">Freeze Chat</span></div></div>
+                <div class="tools-menu"><h4>🛠️ Tools Script</h4><div class="badge-list"><span class="badge">Ddos V1</span><span class="badge">Ddos V2</span><span class="badge">Ddos V3</span><span class="badge">DLL [Dan lain lain]</span></div></div>
+                <button class="order-btn" onclick="orderTelegram('SCRIPT APHOPIS')">📱 Click Order Telegram</button>
+            </div>
+        </div>
+
+        <!-- SCRIPT GXION NEW -->
+        <div class="product-card">
+            <div class="product-header"><h2>⚡ SCRIPT GXION NEW</h2></div>
+            <div class="product-body">
+                <div class="price-list"><div class="price-item"><span>💎 Permanen Update + Grup</span><span>20K</span></div></div>
+                <div class="menu-bugs"><h4>🐛 Efek Bug Gxion New</h4><div class="badge-list"><span class="badge">delaychat → spam bug delay</span><span class="badge">xyz → delay hard invisible</span><span class="badge">Xsilent → delay hard 100% invisible</span><span class="badge">delayperma → permanent delay type</span><span class="badge">iosattack → ios invisible</span><span class="badge">sendelay → delay hard one hit invisible</span></div></div>
+                <div class="tools-menu"><h4>🛠️ Tools Menu Gxion New</h4><div class="badge-list"><span class="badge">brat → Brat Text Maker</span><span class="badge">catbox → Catbox Foto</span><span class="badge">catboxurl → Foto Catbox</span><span class="badge">convert → Convert Media</span><span class="badge">hd → HD Enhancer</span><span class="badge">tiktokdl → Download TikTok</span><span class="badge">snack → Download SnackVideo</span><span class="badge">cekmasadepan → Ramalan Random</span><span class="badge">cuaca → Cek Cuaca</span><span class="badge">time → Waktu Indonesia</span><span class="badge">ssiphone → SS iPhone Thema</span><span class="badge">decjs → Encrypt JS</span><span class="badge">harga → Harga Script</span></div></div>
+                <button class="order-btn" onclick="orderTelegram('SCRIPT GXION NEW')">📱 Click Order Telegram</button>
+            </div>
+        </div>
+
+        <!-- SCRIPT THE GLITCH -->
+        <div class="product-card">
+            <div class="product-header"><h2>🌀 SCRIPT THE GLITCH</h2></div>
+            <div class="product-body">
+                <div class="price-list"><div class="price-item"><span>✨ Permanen Update</span><span>15K</span></div><div class="price-item"><span>🔄 Reseller Script (bisa jual)</span><span>25K</span></div></div>
+                <div class="menu-bugs"><h4>🐛 Efek Bug Script Glitch</h4><div class="badge-list"><span class="badge">delay spam</span><span class="badge">delay hard level</span><span class="badge">delay brutality</span><span class="badge">permanen delay</span><span class="badge">fc ios invisible</span></div></div>
+                <div class="tools-menu"><h4>✅ Keunggulan</h4><div class="badge-list"><span class="badge">BEBAS SPAM COCOK MURBUG</span><span class="badge">ANTI KENON 90%</span></div></div>
+                <button class="order-btn" onclick="orderTelegram('SCRIPT THE GLITCH')">📱 Click Order Telegram</button>
+            </div>
+        </div>
+
+        <!-- SCRIPT OVALIUM GHOST -->
+        <div class="product-card">
+            <div class="product-header"><h2>👻 OVALIUM GHOST & APK</h2></div>
+            <div class="product-body">
+                <div class="price-list"><div class="price-item"><span>💀 Permanen Update + Get APK</span><span>30K</span></div><div class="price-item"><span>🔁 Reseller Script (bisa jual)</span><span>50K</span></div></div>
+                <div class="menu-bugs"><h4>🐛 Efek Bug Ovalium</h4><div class="badge-list"><span class="badge">specterdelay → DELAY FOR MURBUG</span><span class="badge">spamxdelay → DELAY HARD BEBAS SPAM</span><span class="badge">twinsdelay → DELAY HARD BETA</span><span class="badge">majesticdelay → BEBAS SPAM NO LOG OUT</span><span class="badge">brutaldelay → DELAY HARD INFINITY</span><span class="badge">delayduration → HARD DELAY 1000%</span><span class="badge">quantumdelay → DELAY INVISIBLE 2000%</span></div></div>
+                <div class="tools-menu"><h4>🛠️ Tools Ovalium</h4><div class="badge-list"><span class="badge">iQc - iPhone Generator</span><span class="badge">openfile - Open File JavaScript</span><span class="badge">play - Play Music Spotify</span><span class="badge">inforam - Info Server Panel</span><span class="badge">sticker - Convert Image To Sticker</span><span class="badge">brat - Brat Sticker</span><span class="badge">tiktok - TikTok Downloader</span><span class="badge">ip - Cek IP DNS</span><span class="badge">trackip - Track Location IP</span><span class="badge">tourl - To URL Image/Video</span><span class="badge">tourl2 - To URL Image</span></div></div>
+                <button class="order-btn" onclick="orderTelegram('SCRIPT OVALIUM GHOST')">📱 Click Order Telegram</button>
+            </div>
+        </div>
+
+        <!-- LOS ENGLES SCRIPT -->
+        <div class="product-card">
+            <div class="product-header"><h2>🔥 LOS ENGLES SCRIPT</h2><p style="font-size:12px;">BEBAS SPAM BUG | Auto Update</p></div>
+            <div class="product-body">
+                <div class="price-list"><div class="price-item"><span>📦 No Update</span><span>30K</span></div><div class="price-item"><span>♾️ Permanen</span><span>50K</span></div></div>
+                <div class="menu-bugs"><h4>🐛 Adventure Effect</h4><div class="badge-list"><span class="badge">Delay bebas spam (bebas spam)</span><span class="badge">Forceclose Invisible (bebas spam)</span><span class="badge">Blank no click</span><span class="badge">Delay hard aman nokos</span><span class="badge">Forceclose iPhone</span></div></div>
+                <div class="tools-menu"><h4>✨ Fitur & New Update</h4><div class="badge-list"><span class="badge">Support semua sender WhatsApp</span><span class="badge">Button style pada success bug</span><span class="badge">New Function Hard</span><span class="badge">New Tampilan Script</span><span class="badge">New Thumbnail Scripts</span><span class="badge">Support Node JS 23-24-25</span></div></div>
+                <button class="order-btn" onclick="orderTelegram('LOS ENGLES SCRIPT')">📱 Click Order Telegram</button>
+            </div>
+        </div>
+    </div>
+    <!-- Tombol Info Channel di dalam tab script -->
+    <div class="info-buttons">
+        <button class="info-channel-btn priv" onclick="openTelegram('aboutvnko')">📢 Info Channel Pribadi</button>
+        <button class="info-channel-btn prod" onclick="openTelegram('elclasicmdr')">🛍️ Info Channel Produk</button>
+    </div>
+</div>
+
+<!-- TAB PANEL PTERODACTYL -->
+<div id="panelTab" class="tab-content">
+    <div class="products-grid">
+        <div class="product-card">
+            <div class="product-header">
+                <h2>🐉 OPEN PANEL PTERODACTYL</h2>
+            </div>
+            <div class="product-body">
+                <div class="price-list">
+                    <div class="price-item"><span>🚀 Panel Unlimited</span><span>5K</span></div>
+                    <div class="price-item"><span>🔄 Reseller Panel</span><span>10K</span></div>
+                </div>
+                <div class="menu-bugs">
+                    <h4>✨ Fitur Panel Pterodactyl</h4>
+                    <div class="badge-list">
+                        <span class="badge">✅ Unlimited Resource</span>
+                        <span class="badge">✅ Support All Version</span>
+                        <span class="badge">✅ Full Access</span>
+                        <span class="badge">✅ Fast Response</span>
+                        <span class="badge">✅ Anti Lag</span>
+                        <span class="badge">✅ 24/7 Support</span>
+                    </div>
+                </div>
+                <div class="tools-menu">
+                    <h4>🎁 Keunggulan</h4>
+                    <div class="badge-list">
+                        <span class="badge">Bisa untuk Bot WhatsApp</span>
+                        <span class="badge">Bisa untuk Web Hosting</span>
+                        <span class="badge">Bisa untuk Game Server</span>
+                        <span class="badge">Minecraft / GTA SA-MP</span>
+                        <span class="badge">Support Node.js 20-25</span>
+                        <span class="badge">SSL Gratis</span>
+                    </div>
+                </div>
+                <button class="order-btn" onclick="orderTelegram('OPEN PANEL PTERODACTYL')">📱 Click Order Telegram</button>
+            </div>
+        </div>
+    </div>
+    <!-- Tombol Info Channel di dalam tab panel -->
+    <div class="info-buttons">
+        <button class="info-channel-btn priv" onclick="openTelegram('aboutvnko')">📢 Info Channel Pribadi</button>
+        <button class="info-channel-btn prod" onclick="openTelegram('elclasicmdr')">🛍️ Info Channel Produk</button>
+    </div>
+</div>
+
+<div class="footer">
+    <p>⭐ Kinoo Store | 🛒 Script WhatsApp Bot | 🐉 Open Panel Pterodactyl</p>
+    <p style="margin-top:8px;">© 2025 Kinoo Store | Order via Telegram langsung | Fast Response | 24/7 Support</p>
+</div>
+
+<script>
+    // GAMES DATA - TANPA PIANO TILES
+    const games = [
+        { id:1, name:"2048 Puzzle", category:"puzzle", icon:"🔢", desc:"Gabungkan angka hingga 2048!", play:()=>window.open("https://play2048.co/","_blank") },
+        { id:2, name:"Flappy Bird", category:"arcade", icon:"🐦", desc:"Hindari pipa!", play:()=>window.open("https://flappybird.io/","_blank") },
+        { id:3, name:"Tic Tac Toe", category:"strategi", icon:"❌⭕", desc:"Game XO klasik.", play:()=>window.open("https://playtictactoe.org/","_blank") },
+        { id:4, name:"Memory Match", category:"puzzle", icon:"🃏", desc:"Cocokkan kartu.", play:()=>window.open("https://matchthememory.com/","_blank") },
+        { id:5, name:"Snake Game", category:"arcade", icon:"🐍", desc:"Ular klasik.", play:()=>window.open("https://playsnake.org/","_blank") },
+        { id:6, name:"Sudoku", category:"puzzle", icon:"🔢", desc:"Isi angka 1-9.", play:()=>window.open("https://sudoku.com/","_blank") },
+        { id:7, name:"Bubble Shooter", category:"arcade", icon:"🫧", desc:"Tembak gelembung.", play:()=>window.open("https://bubbleshooter.net/","_blank") },
+        { id:8, name:"Chess", category:"strategi", icon:"♟️", desc:"Catur melawan AI.", play:()=>window.open("https://www.chess.com/play/computer","_blank") },
+        { id:9, name:"Pacman", category:"arcade", icon:"👻", desc:"Makan titik hindari hantu.", play:()=>window.open("https://www.google.com/logos/2010/pacman10-i.html","_blank") },
+        { id:10, name:"Dino Runner", category:"arcade", icon:"🦖", desc:"Lompat kaktus.", play:()=>window.open("chrome://dino","_blank") },
+        { id:11, name:"Candy Crush", category:"puzzle", icon:"🍬", desc:"Cocokkan permen.", play:()=>window.open("https://www.candycrush.com/","_blank") },
+        { id:12, name:"Solitaire", category:"kartu", icon:"🃏", desc:"Susun kartu.", play:()=>window.open("https://solitaired.com/","_blank") },
+        { id:13, name:"Minesweeper", category:"puzzle", icon:"💣", desc:"Temukan tambang.", play:()=>window.open("https://minesweeper.online/","_blank") },
+        { id:14, name:"Word Search", category:"puzzle", icon:"📖", desc:"Cari kata tersembunyi.", play:()=>window.open("https://thewordsearch.com/","_blank") },
+        { id:15, name:"Brick Breaker", category:"arcade", icon:"🧱", desc:"Hancurkan bata.", play:()=>window.open("https://www.crazygames.com/game/brick-breaker","_blank") },
+        { id:16, name:"Space Invaders", category:"arcade", icon:"👾", desc:"Tembak alien.", play:()=>window.open("https://www.spaceinvaders.com/","_blank") },
+        { id:17, name:"Tetris", category:"puzzle", icon:"🧩", desc:"Susun blok.", play:()=>window.open("https://tetris.com/play-tetris","_blank") },
+        { id:18, name:"Guitar Flash", category:"musik", icon:"🎸", desc:"Mainkan lagu.", play:()=>window.open("https://guitarflash.com/","_blank") },
+        { id:19, name:"Run 3", category:"arcade", icon:"🏃", desc:"Lari di terowongan.", play:()=>window.open("https://www.coolmathgames.com/0-run-3","_blank") },
+        { id:20, name:"Zuma", category:"puzzle", icon:"🐸", desc:"Tembak bola warna.", play:()=>window.open("https://www.crazygames.com/game/zuma","_blank") },
+        { id:21, name:"Mahjong", category:"puzzle", icon:"🀄", desc:"Cocokkan ubin.", play:()=>window.open("https://www.mahjong.com/","_blank") },
+        { id:22, name:"Paper.io", category:"strategi", icon:"📄", desc:"Kuasai wilayah.", play:()=>window.open("https://paper-io.com/","_blank") },
+        { id:23, name:"Slither.io", category:"arcade", icon:"🐍", desc:"Ular raksasa.", play:()=>window.open("https://slither.io/","_blank") },
+        { id:24, name:"Agar.io", category:"arcade", icon:"🟢", desc:"Makan sel lain.", play:()=>window.open("https://agar.io/","_blank") }
+    ];
+
+    const categories = [...new Set(games.map(g=>g.category))];
+    let activeCategory = "all";
+
+    function renderCategories() {
+        const container = document.getElementById("categoryList");
+        let html = `<button class="category-btn ${activeCategory==='all'?'active':''}" data-cat="all">🎯 Semua</button>`;
+        const catNames = {puzzle:"🧩 Puzzle",arcade:"🎮 Arcade",strategi:"♟️ Strategi",kartu:"🃏 Kartu",musik:"🎵 Musik"};
+        categories.forEach(cat=>{
+            let name = catNames[cat] || cat;
+            html += `<button class="category-btn ${activeCategory===cat?'active':''}" data-cat="${cat}">${name}</button>`;
+        });
+        container.innerHTML = html;
+        document.querySelectorAll(".category-btn").forEach(btn=>{
+            btn.addEventListener("click",()=>{
+                activeCategory = btn.dataset.cat;
+                renderCategories();
+                renderGames();
+            });
+        });
+    }
+
+    function renderGames() {
+        let filtered = activeCategory==="all"?games:games.filter(g=>g.category===activeCategory);
+        const container = document.getElementById("allGamesGrid");
+        container.innerHTML = filtered.map(game=>`
+            <div class="game-card" onclick="playGame(${game.id})">
+                <div class="game-image"><span style="font-size:54px;">${game.icon}</span></div>
+                <div class="game-info">
+                    <h3>${game.name}</h3>
+                    <p>${game.desc.substring(0,45)}</p>
+                    <button class="play-btn">🎮 Mainkan</button>
+                </div>
+            </div>
+        `).join("");
+    }
+
+    function playGame(id){
+        const game = games.find(g=>g.id===id);
+        if(game && game.play) {
+            try {
+                game.play();
+            } catch(e) {
+                alert("Sedang memuat game " + game.name + "...");
+                window.open(`https://www.google.com/search?q=${encodeURIComponent(game.name + " online game")}`, "_blank");
+            }
+        } else {
+            alert("Memuat game...");
+        }
+    }
+
+    function switchTab(tab){
+        document.querySelectorAll('.tab-btn').forEach(btn=>btn.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(content=>content.classList.remove('active'));
+        if(tab==='games'){
+            document.querySelector('.tab-btn:first-child').classList.add('active');
+            document.getElementById('gamesTab').classList.add('active');
+        } else if(tab==='scripts'){
+            document.querySelectorAll('.tab-btn')[1].classList.add('active');
+            document.getElementById('scriptsTab').classList.add('active');
+        } else {
+            document.querySelectorAll('.tab-btn')[2].classList.add('active');
+            document.getElementById('panelTab').classList.add('active');
+        }
+    }
+
+    // Fungsi untuk order produk (username shvenkoqr)
+    function orderTelegram(productName) {
+        const message = `Halo Leon Shiki, saya ingin order ${productName}. Mohon info lebih lanjut.`;
+        const username = "shvenkoqr";
+        const url = `https://t.me/${username}?text=${encodeURIComponent(message)}`;
+        window.open(url, "_blank");
+    }
+
+    // Fungsi untuk membuka channel Telegram (info pribadi & produk)
+    function openTelegram(username) {
+        const url = `https://t.me/${username}`;
+        window.open(url, "_blank");
+    }
+
+    renderCategories();
+    renderGames();
+</script>
+</body>
+</html>
